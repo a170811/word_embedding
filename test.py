@@ -7,5 +7,7 @@ print(word_base('this is a sentence.'))
 ddd = json.load(open('./test.json'))
 print(ddd)
 """
-word_affix("this is a sentence absorbtion avalible pretrain ." , 2 )
+sentence = "this is a sentence absorbtion avalible pretrain ." 
+print( word_affix( sentence , 2 ) )
+
 
