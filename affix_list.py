@@ -10,9 +10,8 @@ def clean( words ):
     return out
     
 
-tmp = set()
-
 i = int(input('input 1 to add suffix and 2 to prefix'))
+tmp = ''
 
 if i==1:
     print('input suffix or \'Del\' to cancle or \'ctrl+c\' to end')
@@ -24,7 +23,7 @@ if i==1:
                 if in_=='Del':
                     for i in clean(tmp) :
                         get.remove(i)
-                elif in_ == '' :
+                elif re.match( '[\s]+' , in_ ) or in_==''  :
                     continue
                 else :
                     for i in clean(in_) :
@@ -49,7 +48,7 @@ if i==2:
                 if in_=='Del':
                     for i in clean(tmp) :
                         get.remove(i)
-                elif in_ == '' :
+                elif re.match( '[\s]+' , in_ ) or in_==''  :
                     continue
                 else :
                     for i in clean(in_) :
