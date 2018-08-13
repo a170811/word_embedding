@@ -1,5 +1,5 @@
 
-from text_utils import word_base , word_affix
+from text_utils import word_base , word_affix , make_dict , load_dict
 import json
 
 """

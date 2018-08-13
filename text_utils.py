@@ -1,7 +1,27 @@
 import spacy
 import ast
 import re
+import os
 
+def make_dict( o_fileName = 'dict2index' ):
+    out = dict()
+    for i in range(97,123):
+        for j in range(97,123):
+            for k in range(97,123):
+                out[chr(i)+chr(j)+chr(k)] = ( (i-97)*26*26 + (j-97)*26 + k-97 )
+    with open(o_fileName,'w') as f:
+        f.write(str(out))
+    print('dictionary has been constructed !')
+
+def load_dict( i_fileName = 'dict2index' ):
+    if not os.path.exists( i_fileName ) :
+        make_dict()
+    with open( i_fileName , 'r' ) as f:
+        d_str = f.read()
+        dict2index = ast.literal_eval(d_str)
+        index2dict = dict( zip(dict2index.values() , dict2index.keys()) )
+    return dict2index , index2dict
+    
 
 def word_base( sentence ) :
     nlp = spacy.load('en' , disable=[ 'tagger' , 'parser' , 'ner' , 'textcat' ] )
@@ -46,3 +66,11 @@ def word_affix( sentence , n_match ) :
         while len(affix_vec[i])<2*n_match :
             affix_vec[i].append(0)
     return affix_vec
+
+
+
+
+
+#def n_gram( n_value , word ) :
+#    for 
+    
