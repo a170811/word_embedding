@@ -32,9 +32,9 @@ def load_dict( i_fileName = 'dict2index' ):
 def word_base( sentence ) :
     nlp = spacy.load('en' , disable=[ 'tagger' , 'parser' , 'ner' , 'textcat' ] )
     doc = nlp( sentence )
-    t = tuple()
+    t = []
     for word in doc :
-        t += ( word.lemma_ , )
+        t.append(word.lemma_) 
     return t
 
 def word_affix( sentence , n_match ) :
