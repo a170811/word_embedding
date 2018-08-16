@@ -1,5 +1,5 @@
 
-from text_utils import word_base , word_affix , make_dict , load_dict , tri_gram
+from text_utils import word_base , word_affix , make_dict , load_dict , tri_gram , load_base_dict
 import json
 
 
@@ -7,8 +7,8 @@ import json
 #ddd = json.load(open('./test.json'))
 #print(ddd)
 
-sentence = "homeless tired disable mislead unhappily" 
-print( word_affix( sentence.split() , 2 ) )
+#sentence = "homeless tired disable mislead unhappily" 
+#print( word_affix( sentence.split() , 2 ) )
 
 """
 dict2index , index2dict = load_dict()
@@ -20,3 +20,4 @@ print(a)
 #print(b)
 """
 
+print(load_base_dict())

@@ -29,6 +29,15 @@ def load_dict( i_fileName = 'dict2index' ):
     return dict2index , index2dict
     
 
+def load_base_dict() :
+    out = dict()
+    with open('infl2ori.txt','r') as f:
+        for line in f :
+            i , j = line.split()
+            out[i] = j
+    return out
+
+
 #input sentence and output list
 def word_base( sentence ) :
     nlp = spacy.load('en' , disable=[ 'tagger' , 'parser' , 'ner' , 'textcat' ] )
