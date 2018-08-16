@@ -5,10 +5,16 @@ import os
 
 def make_dict( o_fileName = 'dict2index' ):
     out = dict()
-    for i in range(97,123):
-        for j in range(97,123):
-            for k in range(97,123):
-                out[chr(i)+chr(j)+chr(k)] = ( (i-97)*26*26 + (j-97)*26 + k-97 )
+    count = 0
+    a_z = [ chr(i) for i in range(96,124) ]
+    a_z[0] = '#'
+    a_z[-1] = '$'
+    for i in a_z[0:-1]: #start with '#' (chr(35))
+        for j in a_z[1:-1]:
+            for k in a_z[1:]: #end with '$' (chr(36))
+                out[i+j+k] = count
+                count += 1
+                
     with open(o_fileName,'w') as f:
         f.write(str(out))
     print('dictionary has been constructed !')
@@ -68,9 +74,19 @@ def word_affix( sentence , n_match ) :
     return affix_vec
 
 
-
-
-
-#def n_gram( n_value , word ) :
-#    for 
+def tri_gram( word , dict2index , length = 20 ) :
+    tmp_word = '#'+word+'$'
+    output = []
+    for i in range(len(tmp_word)) :
+        if i+3 >= len(tmp_word) :
+            break 
+        else :
+            tmp = dict2index[ tmp_word[i:i+3] ]
+        if len(output) >= 20 :
+            return output
+        else :
+            output.append( tmp ) 
+    app = [0] * ( length - len(output) ) #append to 20 elements
+    output.extend( app )
+    return output
     
