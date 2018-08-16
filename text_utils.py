@@ -38,13 +38,11 @@ def load_base_dict() :
     return out
 
 
-#input sentence and output list
-def word_base( sentence ) :
-    nlp = spacy.load('en' , disable=[ 'tagger' , 'parser' , 'ner' , 'textcat' ] )
-    doc = nlp( sentence )
+#input list and output list
+def word_base( sentence , dic ) :
     t = []
-    for word in doc :
-        t.append(word.lemma_) 
+    for i , word in enumerate(sentence) :
+        t.append( dic.get(word , sentence[i] ) ) 
     return t
 
 #input list output list
