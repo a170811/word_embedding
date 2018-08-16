@@ -29,6 +29,7 @@ def load_dict( i_fileName = 'dict2index' ):
     return dict2index , index2dict
     
 
+#input sentence and output list
 def word_base( sentence ) :
     nlp = spacy.load('en' , disable=[ 'tagger' , 'parser' , 'ner' , 'textcat' ] )
     doc = nlp( sentence )
@@ -37,8 +38,9 @@ def word_base( sentence ) :
         t.append(word.lemma_) 
     return t
 
-def word_affix( sentence , n_match ) :
-    words = sentence.split(' ')
+#input list output list
+def word_affix( words , n_match ) :
+    
     with open('./prefix.txt' , 'r') as f1 :
         pre_list = [list(ast.literal_eval(line)) for line in f1][0]
     with open('./suffix.txt' , 'r') as f2 :
@@ -73,20 +75,25 @@ def word_affix( sentence , n_match ) :
             affix_vec[i].append(0)
     return affix_vec
 
-
-def tri_gram( word , dict2index , length = 20 ) :
-    tmp_word = '#'+word+'$'
+#input list output list
+def tri_gram( sentence , dict2index , length = 20 ) :
     output = []
-    for i in range(len(tmp_word)) :
-        if i+3 >= len(tmp_word) :
-            break 
-        else :
-            tmp = dict2index[ tmp_word[i:i+3] ]
-        if len(output) >= 20 :
-            return output
-        else :
-            output.append( tmp ) 
-    app = [0] * ( length - len(output) ) #append to 20 elements
-    output.extend( app )
+
+    for word in sentence :
+
+        tmp_word = '#'+word+'$'
+        output_tmp = []
+        for i in range(len(tmp_word)) :
+            if i+3 >= len(tmp_word) :
+                break 
+            else :
+                tmp = dict2index[ tmp_word[i:i+3] ]
+            if len(output_tmp) >= 20 :
+                break 
+            else :
+                output_tmp.append( tmp ) 
+        app = [0] * ( length - len(output_tmp) ) #append to 20 elements
+        output_tmp.extend( app )
+        output.append(output_tmp)
     return output
     
