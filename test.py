@@ -7,12 +7,14 @@ import json
 #ddd = json.load(open('./test.json'))
 #print(ddd)
 
-#sentence = "homeless tired disable mislead unhappily" 
-#print( word_affix( sentence.split() , 2 ) )
+sentence = "homeless tired disable mislead unhappily" 
+print( word_affix( sentence.split() , 2 ) )
 
+"""
 dic = load_base_dict()
 sen = 'this is relation apples is very delicious boring'
 print(word_base(sen.split() , dic) )
+"""
 
 """
 dict2index , index2dict = load_dict()

@@ -2,6 +2,7 @@ import spacy
 import ast
 import re
 import os
+from tqdm import tqdm
 
 def make_dict( o_fileName = 'dict2index' ):
     out = dict()
@@ -41,7 +42,8 @@ def load_base_dict() :
 #input list and output list
 def word_base( sentence , dic ) :
     t = []
-    for i , word in enumerate(sentence) :
+    print('-----------------transfer to base form-------------------')
+    for i , word in enumerate( tqdm(sentence , ncols=80 ) )  :
         t.append( dic.get(word , sentence[i] ) ) 
     return t
 
@@ -60,33 +62,33 @@ def word_affix( words , n_match ) :
         pre_regex.append(re.compile(r'^'+prefix))
     for suffix in suf_list :
         suf_regex.append(re.compile(suffix+r'$'))
-    affix_vec = []
-    for i , word in enumerate(words) :
-        affix_vec.append([])
+    pre_vec = []
+    suf_vec = []
+    print('-----------------detect word affixes-------------------')
+    for i , word in enumerate( tqdm(words , ncols=80) ) :
+        pre_vec.append([])
+        suf_vec.append([])
         for j , reg in enumerate(pre_regex) :
             if reg.search( word ) :
-                if len(affix_vec[i])>=n_match :
+                if len(pre_vec[i])>=n_match :
                     break
                 else :
-                    affix_vec[i].append( prefix2index[pre_list[j]]+1 )
-        while len(affix_vec[i])<n_match :
-            affix_vec[i].append(0)
+                    pre_vec[i].append( prefix2index[pre_list[j]]+1 )
 
         for j , reg in enumerate(suf_regex) :
             if reg.search( word ) :
-                if len(affix_vec[i])>=2*n_match :
+                if len(suf_vec[i])>=n_match :
                     break
                 else :
-                    affix_vec[i].append( suffix2index[suf_list[j]]+1 ) #add 1 ,cause 0 for no-match
-        while len(affix_vec[i])<2*n_match :
-            affix_vec[i].append(0)
-    return affix_vec
+                    suf_vec[i].append( suffix2index[suf_list[j]]+1 ) #add 1 ,cause 0 for no-match
+    return pre_vec , suf_vec
 
 #input list output list
 def tri_gram( sentence , dict2index , length = 20 ) :
     output = []
 
-    for word in sentence :
+    print('-----------------tri_gram scaning-------------------')
+    for word in tqdm( sentence , ncols=80 ) :
 
         tmp_word = '#'+word+'$'
         output_tmp = []
