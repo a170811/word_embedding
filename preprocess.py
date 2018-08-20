@@ -22,9 +22,12 @@ class Preprocessing():
         with zipfile.ZipFile('./text8.zip') as f :
             text_words = f.read(f.namelist()[0]).lower().decode('utf-8').split()
 
+        #testing data
+        #text_words = ['moment', 'homeless', 'disable', 'bore', 'frustrate', 'apple', 'milk', 'is', 'good', 'to', 'drink', 'delicious']
+
         #inflection to base
         dict2base_word = load_base_dict()
-        self.text_base = word_base( text_words , dict2base_word )
+        text_base = word_base( text_words , dict2base_word )
 
 
         ##1. self.vocabulary_size
@@ -33,8 +36,7 @@ class Preprocessing():
         # Retrieve the most common words
         count.extend(collections.Counter(text_words+text_base).most_common(max_vocabulary_size - 1)) #less to many
         # Remove samples with less than 'min_occurrence' occurrences
-        for i in range(len(count) - 1, 1, -1):
-            print(i)
+        for i in range(len(count) - 1, 0, -1):
             if count[i][1] < min_occurrence*2:
                 count.pop(i)
             else:
@@ -59,6 +61,7 @@ class Preprocessing():
             # Retrieve a word id, or assign it index 0 ('UNK') if not in dictionary
             index = self.word2id.get(word, 0)
             self.data.append(index)
+        print('data = ' , self.data)
 
         ##4. self.data_base
         #data_base to index
@@ -67,6 +70,7 @@ class Preprocessing():
             # Retrieve a word id, or assign it index 0 ('UNK') if not in dictionary
             index = self.word2id.get(word, 0)
             self.base.append(index)
+        print('base = ' , self.base)
 
         ##4. self.text_gram
         #tri-gram part
@@ -77,6 +81,16 @@ class Preprocessing():
         ##5. self.prefix and self.suffix
         #prefix and suffix vector
         self.prefix , self.suffix = word_affix( text_words , 2 )
+
+
+text_words = ['moment', 'homeless', 'disable', 'bore', 'frustrate', 'apple', 'milk', 'is', 'good', 'to', 'drink', 'delicious']
+print(text_words)
+test = Preprocessing()
+print(test.data)
+print(test.base)
+print(test.text_gram)
+print(test.prefix)
+print(test.suffix)
 
 """ backup
 
@@ -143,8 +157,9 @@ print(prefix[1:10])
 print(suffix[1:10])
 
 """
+"""
         #backup
-        """ infle whether to vec?
+        #infle whether to vec?
         count = [('UNK', -1)]
         count.extend(collections.Counter(text_base).most_common(max_vocabulary_size - 1)) #less to many
         for i in range(len(count) - 1, 1, -1):
@@ -166,4 +181,4 @@ print(suffix[1:10])
             # Retrieve a word id, or assign it index 0 ('UNK') if not in dictionary
             index = self.word2id.get(word, 0)
             self.infl_data.append(index)
-        """
+"""

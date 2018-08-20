@@ -74,6 +74,8 @@ def word_affix( words , n_match ) :
                     break
                 else :
                     pre_vec[i].append( prefix2index[pre_list[j]]+1 )
+        if len(pre_vec[i])<n_match:
+            pre_vec[i].extend( [0]*( n_match-len(pre_vec[i]) ) )
 
         for j , reg in enumerate(suf_regex) :
             if reg.search( word ) :
@@ -81,6 +83,9 @@ def word_affix( words , n_match ) :
                     break
                 else :
                     suf_vec[i].append( suffix2index[suf_list[j]]+1 ) #add 1 ,cause 0 for no-match
+        if len(suf_vec[i])<n_match:
+            suf_vec[i].extend( [0]*( n_match-len(suf_vec[i]) ) )
+
     return pre_vec , suf_vec
 
 #input list output list
