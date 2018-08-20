@@ -2,6 +2,7 @@ import tensorflow as tf
 from tqdm import tqdm
 from preprocess import Preprocessing
 import os
+import urllib.request
 
 url = 'http://mattmahoney.net/dc/text8.zip' 
 data_path = 'text8.zip' 
@@ -9,7 +10,7 @@ data_path = 'text8.zip'
 ##load data
 if not os.path.exists(data_path):
     print("Downloading the dataset... (It may take some time)")
-    filename, _ = urllib.urlretrieve(url, data_path)
+    filename, _ = urllib.request.urlretrieve(url, data_path)
     print("Done!")
 # Unzip the dataset file. Text has already been processed
 #with zipfile.ZipFile('./text8.zip') as f :
