@@ -1,10 +1,5 @@
 import collections
-import zipfile
 from tqdm import tqdm
-
-import numpy as np
-import tensorflow as tf
-
 from text_utils import *
 
 ###change to class form
@@ -12,18 +7,8 @@ from text_utils import *
 
 class Preprocessing():
 
-    def __init__(self , url = 'http://mattmahoney.net/dc/text8.zip' ,data_path = 'text8.zip' , max_vocabulary_size = 50000 , min_occurrence = 10) :
+    def __init__(self ,text_words , max_vocabulary_size = 50000 , min_occurrence = 10) :
 
-        if not os.path.exists(data_path):
-            print("Downloading the dataset... (It may take some time)")
-            filename, _ = urllib.urlretrieve(url, data_path)
-            print("Done!")
-        # Unzip the dataset file. Text has already been processed
-        with zipfile.ZipFile('./text8.zip') as f :
-            text_words = f.read(f.namelist()[0]).lower().decode('utf-8').split()
-
-        #testing data
-        #text_words = ['moment', 'homeless', 'disable', 'bore', 'frustrate', 'apple', 'milk', 'is', 'good', 'to', 'drink', 'delicious']
 
         #inflection to base
         dict2base_word = load_base_dict()
@@ -83,14 +68,6 @@ class Preprocessing():
         self.prefix , self.suffix = word_affix( text_words , 2 )
 
 
-text_words = ['moment', 'homeless', 'disable', 'bore', 'frustrate', 'apple', 'milk', 'is', 'good', 'to', 'drink', 'delicious']
-print(text_words)
-test = Preprocessing()
-print(test.data)
-print(test.base)
-print(test.text_gram)
-print(test.prefix)
-print(test.suffix)
 
 """ backup
 
