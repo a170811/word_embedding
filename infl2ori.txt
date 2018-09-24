@@ -1,4 +1,4 @@
-﻿aapas	aapa
+apas	aapa
 aardvarks	aardvark
 aardwolves	aardwolf
 abs	ab
