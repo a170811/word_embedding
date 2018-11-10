@@ -1,9 +1,8 @@
 import ast
 import re
 import os
-from tqdm import tqdm
 
-def make_dict( o_fileName = 'dict2index' ):
+def make_dict():
     out = dict()
     count = 0
     a_z = [ chr(i) for i in range(96,124) ]
@@ -15,19 +14,7 @@ def make_dict( o_fileName = 'dict2index' ):
                 out[i+j+k] = count
                 count += 1
                 
-    with open(o_fileName,'w') as f:
-        f.write(str(out))
-    print('dictionary has been constructed !')
-
-def load_dict( i_fileName = 'dict2index' ):
-    if not os.path.exists( i_fileName ) :
-        make_dict()
-    with open( i_fileName , 'r' ) as f:
-        d_str = f.read()
-        dict2index = ast.literal_eval(d_str)
-        index2dict = dict( zip(dict2index.values() , dict2index.keys()) )
-    return dict2index , index2dict
-    
+    return out
 
 def load_base_dict() :
     out = dict()
@@ -41,58 +28,52 @@ def load_base_dict() :
 #input list and output list
 def word_base(sentence, dic):
     t = []
-    print('-----------------transfer to base form-------------------')
-    for i, word in enumerate(tqdm(sentence , ncols=80)):
-        t.append(dic.get(word, sentence[i])) 
+    for i, word in enumerate(sentence):
+        t.append(dic.get(word, 0)) 
     return t
 
-#input list output list
-def word_affix( words , n_match ) :
-    
-    with open('./prefix.txt' , 'r') as f1 :
+def load_affix(prefix_path = './prefix.txt', suffix_path = './suffix.txt'):
+    with open(prefix_path , 'r') as f1 :
         pre_list = [list(ast.literal_eval(line)) for line in f1][0]
-    with open('./suffix.txt' , 'r') as f2 :
+    with open(suffix_path , 'r') as f2 :
         suf_list = [list(ast.literal_eval(line)) for line in f2][0]
-    prefix2index = dict( zip( pre_list , range(len(pre_list)) ) )
-    suffix2index = dict( zip( suf_list , range(len(suf_list)) ) )
+    prefix2index = dict(zip(pre_list, range(len(pre_list))))
+    suffix2index = dict(zip(suf_list, range(len(suf_list))))
+    return pre_list, suf_list, prefix2index, suffix2index
+
+
+#input list output list
+def word_affix(words, a) :
+    
+    pre_list, suf_list, prefix2index, suffix2index = a
     pre_regex = []
     suf_regex = []
     for prefix in pre_list :
         pre_regex.append(re.compile(r'^'+prefix))
     for suffix in suf_list :
         suf_regex.append(re.compile(suffix+r'$'))
-    pre_vec = []
-    suf_vec = []
-    print('-----------------detect word affixes-------------------')
-    for i , word in enumerate( tqdm(words , ncols=80) ) :
-        pre_vec.append([])
-        suf_vec.append([])
+    vec = []
+    for i , word in enumerate(words) :
+        vec.append([])
         for j , reg in enumerate(pre_regex) :
-            if reg.search( word ) :
-                if len(pre_vec[i])>=n_match :
-                    break
-                else :
-                    pre_vec[i].append( prefix2index[pre_list[j]]+1 )
-        if len(pre_vec[i])<n_match:
-            pre_vec[i].extend( [0]*( n_match-len(pre_vec[i]) ) )
-
+            if reg.search(word) :
+                vec[i].append(prefix2index[pre_list[j]]+1)
+                break
+        if len(vec[i]) < 1:
+            vec[i].append(0)
         for j , reg in enumerate(suf_regex) :
-            if reg.search( word ) :
-                if len(suf_vec[i])>=n_match :
-                    break
-                else :
-                    suf_vec[i].append( suffix2index[suf_list[j]]+1 ) #add 1 ,cause 0 for no-match
-        if len(suf_vec[i])<n_match:
-            suf_vec[i].extend( [0]*( n_match-len(suf_vec[i]) ) )
+            if reg.search(word) :
+                vec[i].append(suffix2index[suf_list[j]]+1) #add 1 ,cause 0 for no-match
+        if len(vec[i]) < 2:
+            vec[i].append(0)
 
-    return pre_vec , suf_vec
+    return vec
 
 #input list output list
 def tri_gram( sentence , dict2index , length = 20 ) :
     output = []
 
-    print('-----------------tri_gram scaning-------------------')
-    for word in tqdm( sentence , ncols=80 ) :
+    for word in sentence:
 
         tmp_word = '#'+word+'$'
         output_tmp = []

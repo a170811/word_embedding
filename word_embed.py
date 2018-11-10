@@ -1,25 +1,80 @@
 import tensorflow as tf
 from tqdm import tqdm
-from preprocess import Preprocessing
+import zipfile
 import os
-import urllib.request
+import urllib
+import text_utils 
+import collections
 
-url = 'http://mattmahoney.net/dc/text8.zip' 
-data_path = 'text8.zip' 
 
-##load data
-if not os.path.exists(data_path):
-    print("Downloading the dataset... (It may take some time)")
-    filename, _ = urllib.request.urlretrieve(url, data_path)
-    print("Done!")
-# Unzip the dataset file. Text has already been processed
-with zipfile.ZipFile('./text8.zip') as f :
-    text_words = f.read(f.namelist()[0]).lower().decode('utf-8').split()
+#dataset url
+#url = 'http://mattmahoney.net/dc/text8.zip' 
 
-data = Preprocessing( text_words , min_occurence = 0.1 )
 
-#Parameters
+#data = Preprocessing( text_words , min_occurence = 0.1 )
 
+
+#variables
+max_vocabulary_size = 50000
+min_occurrence = 10
+
+dict2base_word = text_utils.load_base_dict()
+text_base = text_utils.word_base( text_words , dict2base_word )
+
+#add unknown item
+count = [('UNK', -1)]
+# Retrieve the most common words
+count.extend(collections.Counter(text_words+text_base).most_common(max_vocabulary_size - 1)) #less to many
+# Remove samples with less than 'min_occurrence' occurrences
+for i in range(len(count) - 1, 0, -1):
+    if count[i][1] < min_occurrence*2:
+        count.pop(i)
+    else:
+        # The collection is ordered, so stop when 'min_occurrence' is reached
+        break
+
+vocabulary_size = len(count)
+
+#dictionary
+word2id = dict()
+for i , (word,_) in enumerate(count):
+    word2id[word] = i 
+id2word = dict(zip(word2id.values(),word2id.keys()))
+
+
+def next_batch(batch_size, num_skips, skip_window):
+    global data_index
+    assert batch_size % num_skips == 0
+    assert num_skips <= 2 * skip_window
+    batch = np.ndarray(shape=(batch_size), dtype=np.int32)
+    labels = np.ndarray(shape=(batch_size, 1), dtype=np.int32)
+    # get window size (words left and right + current one)
+    span = 2 * skip_window + 1
+    buffer = collections.deque(maxlen=span)
+    if data_index + span > len(data):
+        data_index = 0
+    buffer.extend(data[data_index:data_index + span])
+    data_index += span
+    for i in range(batch_size // num_skips):
+        context_words = [w for w in range(span) if w != skip_window]
+        words_to_use = random.sample(context_words, num_skips)
+        for j, context_word in enumerate(words_to_use):
+            batch[i * num_skips + j] = buffer[skip_window]
+            labels[i * num_skips + j, 0] = buffer[context_word]
+        if data_index == len(data):
+            buffer.extend(data[0:span])
+            data_index = span
+        else:
+            buffer.append(data[data_index])
+            data_index += 1
+    # Backtrack a little bit to avoid skipping words in the end of a batch
+    data_index = (data_index + len(data) - span) % len(data)
+    return batch, labels
+
+
+
+###last UNK count
+"""
 # Network Parameters
 n_hidden_1 = 256 
 n_hidden_2 = 256 
@@ -104,6 +159,10 @@ def conv_net(x, weights, biases, dropout):
 # Construct feedforword network
 center_f = neural_net(X , f_weight , f_biases)
 center_c = conv_net(Y , c_weight , c_biases , keep_prob)
+
+"""
+
+
 """
 #testing data
 text_words = ['moment', 'homeless', 'disable', 'bore', 'frustrate', 'apple', 'milk', 'is', 'good', 'to', 'drink', 'delicious']
