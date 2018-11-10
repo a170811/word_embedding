@@ -1,4 +1,3 @@
-import spacy
 import ast
 import re
 import os
@@ -40,11 +39,11 @@ def load_base_dict() :
 
 
 #input list and output list
-def word_base( sentence , dic ) :
+def word_base(sentence, dic):
     t = []
     print('-----------------transfer to base form-------------------')
-    for i , word in enumerate( tqdm(sentence , ncols=80 ) )  :
-        t.append( dic.get(word , sentence[i] ) ) 
+    for i, word in enumerate(tqdm(sentence , ncols=80)):
+        t.append(dic.get(word, sentence[i])) 
     return t
 
 #input list output list

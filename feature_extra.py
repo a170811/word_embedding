@@ -3,7 +3,6 @@ from tqdm import tqdm
 from text_utils import *
 
 ###change to class form
-###testing
 
 class Preprocessing():
 
