@@ -103,7 +103,6 @@ class Preprocess(object):
         base = word_base(self.idx2word[1:], self.base2idx)
         tri = tri_gram(self.idx2word[1:], self.tri2idx, trigram_length)
         affix = word_affix(self.idx2word[1:], self.affix2idx)
-        print(self.idx2word[:4], end = 'end\n')
         for i, word in enumerate(self.idx2word[1:], 0):
             hash_m.append([self.word2idx[word]] + [base[i]] + tri[i] + affix[i])
 
