@@ -11,3 +11,6 @@ using</br>
 
 pip install -r requirement.txt</br>
 python3 word_embed.py</br>
+
+
+match affix from long term to short one
