@@ -64,6 +64,7 @@ def word_affix(words, a) :
         for j , reg in enumerate(suf_regex) :
             if reg.search(word) :
                 vec[i].append(suffix2index[suf_list[j]]+1) #add 1 ,cause 0 for no-match
+                break
         if len(vec[i]) < 2:
             vec[i].append(0)
 
