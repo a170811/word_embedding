@@ -5,7 +5,7 @@ import codecs
 import pickle
 import argparse
 from text_utils import *
-from tqdm import tqdm 
+from tqdm import tqdm
 
 
 def parse_args():
@@ -45,7 +45,7 @@ class Preprocess(object):
                 line = line.strip()
                 if not line:
                     continue
-                sent = line.split() 
+                sent = line.split()
                 for word in sent:
                     self.wc[word] = self.wc.get(word, 0) + 1
 
@@ -65,7 +65,7 @@ class Preprocess(object):
         print('constructing affix pair')
         self.affix2idx = load_affix('./prefix.txt', './suffix.txt')
 
-        
+
         pickle.dump(self.wc, open(os.path.join(self.data_dir, 'wc.dat'), 'wb'))
         pickle.dump(self.vocab, open(os.path.join(self.data_dir, 'vocab.dat'), 'wb'))
         pickle.dump(self.idx2word, open(os.path.join(self.data_dir, 'idx2word.dat'), 'wb'))
@@ -99,7 +99,7 @@ class Preprocess(object):
 
     def hash_matrix(self, trigram_length = 12):
         print("constructing hash matrix...")
-        hash_m = [[0]]
+        hash_m = []
         base = word_base(self.idx2word[1:], self.base2idx)
         tri = tri_gram(self.idx2word[1:], self.tri2idx, trigram_length)
         affix = word_affix(self.idx2word[1:], self.affix2idx)
@@ -109,12 +109,12 @@ class Preprocess(object):
         if len(hash_m) < 2:
             raise Exception("no data in hash")
 
-        hash_m[0].extend([0] * (len(hash_m[1]) - 1))
+        hash_m.insert(0, [0] * (len(hash_m[0])))
 
         print("")
         pickle.dump(hash_m, open(os.path.join(self.data_dir, 'hash_matrix.dat'), 'wb'))
         print("hash_matrix done")
-            
+
 
 if __name__ == '__main__':
     args = parse_args()
