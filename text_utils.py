@@ -13,7 +13,7 @@ def make_dict():
             for k in a_z[1:]: #end with '$' (chr(36))
                 out[i+j+k] = count
                 count += 1
-                
+
     return out
 
 def load_base_dict() :
@@ -29,7 +29,7 @@ def load_base_dict() :
 def word_base(sentence, dic):
     t = []
     for i, word in enumerate(sentence):
-        t.append(dic.get(word, 0)) 
+        t.append(dic.get(word, 0))
     return t
 
 def load_affix(prefix_path = './prefix.txt', suffix_path = './suffix.txt'):
@@ -44,7 +44,7 @@ def load_affix(prefix_path = './prefix.txt', suffix_path = './suffix.txt'):
 
 #input list output list
 def word_affix(words, a) :
-    
+
     pre_list, suf_list, prefix2index, suffix2index = a
     pre_regex = []
     suf_regex = []
@@ -76,19 +76,18 @@ def tri_gram( sentence , dict2index , length = 20 ) :
 
     for word in sentence:
 
+        assert word
+
         tmp_word = '#'+word+'$'
         output_tmp = []
-        for i in range(len(tmp_word)) :
-            if i+3 >= len(tmp_word) :
-                break 
+        for i in range(len(tmp_word) - 2) :
+            tmp = dict2index[ tmp_word[i:i+3] ]
+            if len(output_tmp) >= length :
+                break
             else :
-                tmp = dict2index[ tmp_word[i:i+3] ]
-            if len(output_tmp) >= 20 :
-                break 
-            else :
-                output_tmp.append( tmp ) 
+                output_tmp.append( tmp )
         app = [0] * ( length - len(output_tmp) ) #append to 20 elements
         output_tmp.extend( app )
         output.append(output_tmp)
     return output
-    
+
