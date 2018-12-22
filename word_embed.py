@@ -177,5 +177,5 @@ if '__main__' == __name__:
                 average_loss += l
 
         final_embedding = embedding_norm.eval()
-        pickle.dump(fianl_embedding, open(os.path.join(args.model_dir, 'embedding.dat'), 'wb'))
+        pickle.dump(final_embedding, open(os.path.join(args.model_dir, 'embedding.dat'), 'wb'))
 
