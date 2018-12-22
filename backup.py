@@ -1,5 +1,4 @@
 
-"""
 def next_batch(batch_size, num_skips, skip_window):
     global data_index
     assert batch_size % num_skips == 0
@@ -28,11 +27,9 @@ def next_batch(batch_size, num_skips, skip_window):
     # Backtrack a little bit to avoid skipping words in the end of a batch
     data_index = (data_index + len(data) - span) % len(data)
     return batch, labels
-"""
 
 
 ###convolotion
-"""
 # Network Parameters
 n_hidden_1 = 256
 n_hidden_2 = 256
@@ -118,10 +115,8 @@ def conv_net(x, weights, biases, dropout):
 center_f = neural_net(X , f_weight , f_biases)
 center_c = conv_net(Y , c_weight , c_biases , keep_prob)
 
-"""
 
 
-"""
 #testing data
 text_words = ['moment', 'homeless', 'disable', 'bore', 'frustrate', 'apple', 'milk', 'is', 'good', 'to', 'drink', 'delicious']
 
@@ -133,4 +128,3 @@ print( 'data_base_form : \n' , data_obj.base )
 print( 'tri_tram : \n' , data_obj.text_gram )
 print( 'prefix : \n' , data_obj.prefix )
 print( 'suffix : \n' , data_obj.suffix )
-"""
