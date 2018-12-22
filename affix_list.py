@@ -8,7 +8,7 @@ def clean( words ):
         word = re.sub( '[-$\s]' , '' , word )
         out.append(word)
     return out
-    
+
 
 i = int(input('input 1 to add suffix and 2 to prefix'))
 tmp = ''
@@ -63,7 +63,7 @@ if i==2:
     with open('prefix.txt' , 'w') as file1 :
         file1.write(out)
         print('prefix:\n' , out)
-        
+
 
 """
 with open('prefix.txt') as file:
