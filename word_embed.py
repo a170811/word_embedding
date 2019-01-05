@@ -57,6 +57,7 @@ if '__main__' == __name__:
     parser.add_argument('--mb', type=int, default=128, help='mini-batch size')
     #parser.add_argument('--mb', type=int, default=1024, help='mini-batch size')
     parser.add_argument('--learning_rate', type=float, default=0.02, help='learning rate')
+    parser.add_argument('--save_file', type=str, default='./model/model.ckpt', help='model dir')
 
     args =  parser.parse_args()
 
@@ -109,9 +110,8 @@ if '__main__' == __name__:
         negative_samples = tf.reduce_sum(tf.nn.embedding_lookup(embedding_norm,
                 negative_input), 1)
 
-        #validation
-        valid_data = tf.nn.embedding_lookup(embedding_norm, valid_input)
-        similarity = tf.matmul(valid_data, tf.transpose(embedding_norm))
+        #similarity
+        similarity = tf.matmul(X_embed, tf.transpose(embedding_norm))
 
     ###convolutional network
         conv_input = tf.placeholder(tf.int32, shape = [None, context_len])
@@ -136,7 +136,8 @@ if '__main__' == __name__:
         loss = tf.reduce_mean(tf.log(1 + tf.exp(-args.temperature * gradient)))
         optimizer = tf.train.AdamOptimizer(args.learning_rate).minimize(loss)
 
-    with tf.Session(graph = graph) as sess:
+    saver = tf.train.Saver()
+    with tf.Session(graph = graph, config = tf.ConfigProto(log_device_placement = True)) as sess:
         #sess = tf_debug.LocalCLIDebugWrapperSession(sess)
         #sess.add_tensor_filter("has_inf_or_nan", tf_debug.has_inf_or_nan)
 
@@ -149,7 +150,7 @@ if '__main__' == __name__:
             print('epoch', epoch)
             print()
 
-            sim = similarity.eval()
+            sim = sess.run(similarity, feed_dict = {fc_input:valid_examples})
             print('\n------------------------------------------------')
             for i in range(valid_size):
                 valid_word = idx2word[valid_examples[i]]
@@ -178,4 +179,4 @@ if '__main__' == __name__:
 
         final_embedding = embedding_norm.eval()
         pickle.dump(final_embedding, open(os.path.join(args.model_dir, 'embedding.dat'), 'wb'))
-
+        saver.save(sess, args.save_file)
