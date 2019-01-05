@@ -37,7 +37,7 @@ def next_batch(batch_size, num_sample, dict_size):
 def conv2d(x, W, b, strides = 1):
     x = tf.nn.conv2d(x , W, strides = [1, strides, 1, 1], padding = 'VALID')
     x = tf.nn.bias_add(x, b)
-    return tf.sigmoid(x)
+    return tf.nn.relu(x)
 
 def maxpool2d(x, k = 2):
     return tf.nn.max_pool(conv1, ksize = [1, k, 1, 1], strides = [1, 1, 1, 1], padding = 'VALID')
@@ -93,7 +93,7 @@ if '__main__' == __name__:
         #        stddev = 1.0 / math.sqrt(feature_len)))
         fc1_b = tf.Variable(tf.zeros(128) + 1, name = 'fc1_b')
         fc11 = tf.matmul(lookup_f, fc1_w) + fc1_b
-        fc1 = tf.sigmoid(fc11)
+        fc1 = tf.nn.relu(fc11)
 
         fc2_w = tf.Variable(tf.random_normal(shape = (128, args.e_dim)), name = 'fc2_w')
         ##fc2_w = tf.Variable(tf.truncated_normal(shape = (128, args.e_dim), mean = 0,
@@ -101,7 +101,7 @@ if '__main__' == __name__:
         fc2_b = tf.Variable(tf.zeros(args.e_dim) + 1, name = 'fc2_b')
         fc2 = tf.matmul(fc1, fc2_w) + fc2_b
         #vocab * 100
-        fc2 = tf.sigmoid(fc2)
+        fc2 = tf.nn.relu(fc2)
         embedding_norm = fc2 / tf.sqrt(tf.reduce_sum(tf.square(fc2), 1, keepdims=True))
 
         #128 * 100
