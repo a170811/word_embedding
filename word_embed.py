@@ -136,7 +136,7 @@ if '__main__' == __name__:
         loss = tf.reduce_mean(tf.log(1 + tf.exp(-args.temperature * gradient)))
         optimizer = tf.train.AdamOptimizer(args.learning_rate).minimize(loss)
 
-    saver = tf.train.Saver()
+        saver = tf.train.Saver()
     with tf.Session(graph = graph, config = tf.ConfigProto(log_device_placement = True)) as sess:
         #sess = tf_debug.LocalCLIDebugWrapperSession(sess)
         #sess.add_tensor_filter("has_inf_or_nan", tf_debug.has_inf_or_nan)
@@ -165,7 +165,7 @@ if '__main__' == __name__:
             for batch_data_f, batch_data_c, neg_data in next_batch(args.mb, args.n_negs,
                     dict_size):
 
-                log_step = 20
+                log_step = 2000
                 if step % log_step == 0:
                     average_loss /= log_step
                     print('Average loss at step {} is {:.3f}'.format(step, average_loss))
