@@ -120,8 +120,8 @@ if '__main__' == __name__:
         #lookup_c = tf.cast(lookup_c, tf.float32)
         x = tf.reshape(lookup_c, shape = [-1, context_len, feature_len, 1])
         conv1_w = tf.Variable(tf.random_normal([args.slide_window, feature_len, 1,
-                args.e_dim]))
-        conv1_b = tf.Variable(tf.random_normal([args.e_dim]))
+                args.e_dim]), name = 'conv_w')
+        conv1_b = tf.Variable(tf.random_normal([args.e_dim]), name = 'conv_b')
         conv1 = conv2d(x, conv1_w, conv1_b, 1)
         #k = context_len - slie_window + 1
         #iff convolution stride = 1
@@ -137,6 +137,7 @@ if '__main__' == __name__:
         optimizer = tf.train.AdamOptimizer(args.learning_rate).minimize(loss)
 
         saver = tf.train.Saver()
+
     with tf.Session(graph = graph, config = tf.ConfigProto(log_device_placement = True)) as sess:
         #sess = tf_debug.LocalCLIDebugWrapperSession(sess)
         #sess.add_tensor_filter("has_inf_or_nan", tf_debug.has_inf_or_nan)
