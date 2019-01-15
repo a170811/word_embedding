@@ -85,7 +85,6 @@ if '__main__' == __name__:
     ###fully connexcted network
         fc_input = tf.placeholder(tf.int64, shape = [None], name = 'fc_input')
         negative_input = tf.placeholder(tf.int64, shape = [None, args.n_negs], name = 'nega_input')
-        valid_input = tf.constant(valid_examples, dtype = tf.int32)
 
         lookup_f = tf.cast(hash_matrix, tf.float32)
         fc1_w = tf.Variable(tf.random_normal(shape = (feature_len, 128)), name = 'fc1_w')
